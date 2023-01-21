@@ -1,10 +1,26 @@
 # Tanzu Application Platform 安裝筆記 (以 Ubuntu 與 minikube 為例)
 
-### Ubuntu 修改 open file 上限
+### Ubuntu 修改 open file 上限 (須 reboot OS)
 ```gherkin=
 # sudo vim /etc/security/limit.comf，加入下列兩個參數
 * soft nofile 65536
 * hard nofile 65536
+```
+### 環境變數
+```gherkin=
+export TAP_VERSION=1.3.4
+
+export TAP_NAMESPACE=tap-install
+
+export INSTALL_REGISTRY_USERNAME=admin
+
+export INSTALL_REGISTRY_PASSWORD=VMware1!
+
+export INSTALL_REGISTRY_HOSTNAME=reg.microservice.tw
+
+export INSTALL_REPO=tanzu-application-platform
+
+export TAP_DEV_NAMESPACE="default"
 ```
 ### minikube 啟動
 ```gherkin=
@@ -61,7 +77,7 @@ sudo cp $HOME/tanzu-cluster-essentials/ytt /usr/local/bin
 ```gherkin=
 docker login registry.tanzu.vmware.com
 
-docker login reg.microservice.tw
+docker login $INSTALL_REGISTRY_HOSTNAME
 ```
 > Tanzu Cluster Essentials
 ```gherkin=
@@ -73,7 +89,7 @@ imgpkg copy \
 # 上傳    
 imgpkg copy \
     --tar cluster-essentials-bundle-1.3.0.tar \
-    --to-repo harbor.example.com/tanzu-cluster-essentials/cluster-essentials-bundle \
+    --to-repo $INSTALL_REGISTRY_HOSTNAME/tanzu-cluster-essentials/cluster-essentials-bundle \
     --include-non-distributable-layers \
     --registry-ca-cert-path microservice.tw.crt    
 ```
@@ -82,17 +98,17 @@ imgpkg copy \
 # 下載
 imgpkg copy   -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:1.3.3   --to-tar tap-packages-1.3.3.tar   --include-non-distributable-layers
 # 上傳
-imgpkg copy   --tar tap-packages-1.3.3.tar   --to-repo reg.microservice.tw/tanzu-application-platform/tap-packages   --include-non-distributable-layers
+imgpkg copy   --tar tap-packages-1.3.3.tar   --to-repo $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/tap-packages   --include-non-distributable-layers
 ```
 >TBS full dependency
 ```gherkin=
 tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
 # 下載
-imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/full-tbs-deps-package-repo:1.7.4 \
+imgpkg copy -b $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/full-tbs-deps-package-repo:1.7.4 \
   --to-tar=tbs-full-deps-1.7.4.tar
 # 上傳
 imgpkg copy --tar tbs-full-deps-1.7.4.tar \
-  --to-repo=reg.microservice.tw/tanzu-application-platform/full-tbs-deps-package-repo
+  --to-repo=$INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/full-tbs-deps-package-repo
 
 ```
 
@@ -106,10 +122,10 @@ kubectl create secret generic kapp-controller-config \
   --namespace kapp-controller \
   --from-file caCerts=./microservice.tw.crt
 
-INSTALL_BUNDLE=reg.microservice.tw/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9 \
-  INSTALL_REGISTRY_HOSTNAME='reg.microservice.tw' \
-  INSTALL_REGISTRY_USERNAME=[自行輸入] \
-  INSTALL_REGISTRY_PASSWORD=[自行輸入] \
+INSTALL_BUNDLE=$INSTALL_REGISTRY_HOSTNAME/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9 \
+  INSTALL_REGISTRY_HOSTNAME=$INSTALL_REGISTRY_HOSTNAME \
+  INSTALL_REGISTRY_USERNAME=$INSTALL_REGISTRY_USERNAME \
+  INSTALL_REGISTRY_PASSWORD=$INSTALL_REGISTRY_PASSWORD \
   ./install.sh
 ```
 ### 安裝 TAP Packages
@@ -205,51 +221,51 @@ grype:
 kubectl create namespace tap-install
 
 tanzu secret registry add tap-registry \
-  --username [自行輸入] \
-  --password [自行輸入] \
-  --server reg.microservice.tw \
-  --namespace tap-install \
+  --username $INSTALL_REGISTRY_USERNAME \
+  --password $INSTALL_REGISTRY_PASSWORD \
+  --server $INSTALL_REGISTRY_HOSTNAME \
+  --namespace $TAP_NAMESPACE \
   --export-to-all-namespaces \
   --yes
   
 tanzu package repository add tanzu-tap-repository \
-  --url reg.microservice.tw/tanzu-application-platform/tap-packages:$TAP_VERSION \
-  --namespace tap-install
+  --url $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/tap-packages:$TAP_VERSION \
+  --namespace $TAP_NAMESPACE
   
-tanzu package repository get tanzu-tap-repository --namespace tap-install
+tanzu package repository get tanzu-tap-repository --namespace $TAP_NAMESPACE
 
-tanzu package available list --namespace tap-install
+tanzu package available list --namespace $TAP_NAMESPACE
 
 #安裝
 tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_VERSION \
   --values-file tap-values.yaml \
   --poll-timeout 45m \
-  --namespace tap-install
+  --namespace $TAP_NAMESPACE
 
 #修改
 tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION \
   --values-file tap-values.yaml \
   --poll-timeout 45m \
-  --namespace tap-install
+  --namespace $TAP_NAMESPACE
 
 #查詢
 tanzu package installed list --namespace $TAP_NAMESPACE
 #個別套件安裝細節
-kubectl describe packageinstall/buildservice -n tap-install
+kubectl describe packageinstall/buildservice -n $TAP_NAMESPACE
 
 #刪除
-tanzu package installed delete tap  --namespace tap-install
+tanzu package installed delete tap  --namespace $TAP_NAMESPACE
 ```
 
 ### 安裝 Tanzu Build Service Full Dependency
 ```gherkin=
 tanzu package repository add tbs-full-deps-repository \
-  --url reg.microservice.tw/tanzu-application-platform/full-tbs-deps-package-repo:1.7.4 \
+  --url $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/full-tbs-deps-package-repo:1.7.4 \
   --namespace tap-install
 
 tanzu package repository get tbs-full-deps-repository --namespace $TAP_NAMESPACE 
 
-tanzu package install full-tbs-deps -p full-tbs-deps.tanzu.vmware.com -v 1.7.4 -n tap-install
+tanzu package install full-tbs-deps -p full-tbs-deps.tanzu.vmware.com -v 1.7.4 -n $TAP_NAMESPACE
 
 ```
 
@@ -305,10 +321,10 @@ EOF
 > 開始部署
 ```
 tanzu secret registry add registry-credentials \
-  --server reg.microservice.tw \
-  --username [自行輸入] \
-  --password [自行輸入] \
-  --namespace default 
+  --server $INSTALL_REGISTRY_HOSTNAME \
+  --username $INSTALL_REGISTRY_USERNAME \
+  --password $INSTALL_REGISTRY_PASSWORD \
+  --namespace $TAP_DEV_NAMESPACE
   
 
 #一般流程
@@ -321,7 +337,7 @@ tanzu apps workload create tanzu-java-web-app \
   --label tanzu.app.live.view=true \
   --label tanzu.app.live.view.application.name=tanzu-java-web-app \
   --annotation autoscaling.knative.dev/minScale=1 \
-  --namespace default \
+  --namespace $TAP_DEV_NAMESPACE \
   --yes
 
 # 刪除應用 
