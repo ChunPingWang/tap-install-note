@@ -220,7 +220,7 @@ grype:
 ```
 > 開始安裝
 ```gherkin=
-kubectl create namespace tap-install
+kubectl create namespace $TAP_INSTALL
 
 tanzu secret registry add tap-registry \
   --username $INSTALL_REGISTRY_USERNAME \
