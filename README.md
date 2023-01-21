@@ -20,7 +20,7 @@ export INSTALL_REGISTRY_HOSTNAME=reg.microservice.tw
 
 export INSTALL_REPO=tanzu-application-platform
 
-export TAP_DEV_NAMESPACE="default"
+export TAP_DEV_NAMESPACE=default
 ```
 ### minikube 啟動
 ```gherkin=
