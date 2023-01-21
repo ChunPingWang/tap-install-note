@@ -1,5 +1,5 @@
 # Tanzu Application Platform 簡易安裝筆記 
-### (以 Ubuntu 與 minikube 為例)
+### (以 Ubuntu Desktop 與 minikube 為例)
 
 ### Ubuntu 修改 open file 上限 (須 reboot OS)
 ```gherkin=
