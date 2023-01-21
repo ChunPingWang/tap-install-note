@@ -344,7 +344,7 @@ subjects:
 EOF
 ```
 > 開始部署
-```
+```gherkin=
 tanzu secret registry add registry-credentials \
   --server $INSTALL_REGISTRY_HOSTNAME \
   --username $INSTALL_REGISTRY_USERNAME \
@@ -364,7 +364,8 @@ tanzu apps workload create tanzu-java-web-app \
   --annotation autoscaling.knative.dev/minScale=1 \
   --namespace $TAP_DEV_NAMESPACE \
   --yes
-
+```
+```gherkin=
 # 刪除應用 
 tanzu apps workload delete tanzu-java-web-app
 
