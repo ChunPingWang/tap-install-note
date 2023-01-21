@@ -27,6 +27,34 @@ i7g12 #部署應用時， Tanzu Buidl Service 需要用的 repo
 tap-apps #部署應用時，ootb_supply_chain_basic 需要用的 repo
 
 ```
+###安裝 Taznu cli 與 Carvel 工具
+> 從 https://network.pivotal.io/ 下載 VMware Tanzu Application Platform -> tanzu cli
+```gherkin=
+tar -xvf tanzu-framework-linux-amd64.tar -C $HOME/tanzu
+
+export TANZU_CLI_NO_INIT=true
+
+cd $HOME/tanzu
+export VERSION=v0.25.0
+sudo install cli/core/$VERSION/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+
+tanzu plugin install --local cli all
+
+tanzu plugin list
+```
+> 從 https://network.pivotal.io/ 下載 Cluster Essentials for VMware Tanzu -> Carvel cli
+```gherkin=
+mkdir $HOME/tanzu-cluster-essentials
+tar -xvf DOWNLOADED-CLUSTER-ESSENTIALS-BUNDLE -C $HOME/tanzu-cluster-essentials
+
+sudo cp $HOME/tanzu-cluster-essentials/imgpkg /usr/local/bin
+
+sudo cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin
+
+sudo cp $HOME/tanzu-cluster-essentials/kbld /usr/local/bin
+
+sudo cp $HOME/tanzu-cluster-essentials/ytt /usr/local/bin
+```
 
 ### 下載 Tanzu Cluster Essentials、TAP packages、TBS full dependency 並上傳至 private registry (一次性工作)
 > 登入 registry.tanzu.vmware.com 與 reg.microservice.tw (private registry)
@@ -63,8 +91,8 @@ tanzu package available list buildservice.tanzu.vmware.com --namespace tap-insta
 imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/full-tbs-deps-package-repo:1.7.4 \
   --to-tar=tbs-full-deps-1.7.4.tar
 # 上傳
-imgpkg copy --tar tbs-full-deps-1.9.0.tar \
-  --to-repo=reg.microservice.tw/tanzu-application-platform/tbs-full-deps
+imgpkg copy --tar tbs-full-deps-1.7.4.tar \
+  --to-repo=reg.microservice.tw/tanzu-application-platform/full-tbs-deps-package-repo
 
 ```
 
