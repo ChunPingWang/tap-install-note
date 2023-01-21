@@ -12,9 +12,9 @@ export TAP_VERSION=1.3.4
 
 export TAP_NAMESPACE=tap-install
 
-export INSTALL_REGISTRY_USERNAME=admin
+export INSTALL_REGISTRY_USERNAME=[自行輸入]
 
-export INSTALL_REGISTRY_PASSWORD=VMware1!
+export INSTALL_REGISTRY_PASSWORD=[自行輸入]
 
 export INSTALL_REGISTRY_HOSTNAME=reg.microservice.tw
 
