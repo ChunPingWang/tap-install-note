@@ -24,9 +24,11 @@ export TAP_DEV_NAMESPACE=default
 ```
 ### minikube 啟動
 ```gherkin=
-
 minikube start --kubernetes-version='1.22.8' --cpus='10' --memory='60g' --insecure-registry="reg.microservice.tw"
-
+```
+> 開啟另外一個 terminal 執行，啟動 LoadBalancer
+```gherkin=
+minikube tunnel
 ```
 
 #### 鏡像倉庫準備(強烈建議，安裝 TAP 時使用個人的鏡像倉庫，因為 VMware Tanzu Registry 不保證連線品質，會造成不明原因安裝失敗)
@@ -268,6 +270,24 @@ tanzu package repository get tbs-full-deps-repository --namespace $TAP_NAMESPACE
 tanzu package install full-tbs-deps -p full-tbs-deps.tanzu.vmware.com -v 1.7.4 -n $TAP_NAMESPACE
 
 ```
+
+### 啟動 TAP-GUI
+```gherkin=
+kubectl get svc -A
+```
+> 輸出範例如下
+```
+stacks-operator-system      controller-manager-metrics-service                            ClusterIP      10.111.185.42    <none>          8443/TCP                                  44m
+tanzu-system-ingress        contour                                                       ClusterIP      10.110.95.244    <none>          8001/TCP                                  43m
+tanzu-system-ingress        envoy                                                         LoadBalancer   10.97.105.137    10.97.105.137   80:31241/TCP,443:32687/TCP                43m
+tap-gui                     server                                                        ClusterIP      10.105.42.249    <none>          7000/TCP                                  38m
+tekton-pipelines            tekton-pipelines-controller                                   ClusterIP      10.106.142.108   <none>          9090/TCP,8008/TCP,8080/TCP                44m
+```
+> 取得 envoy ip，將 "envoy ip     tap-gui.[domain name]" 寫入 /etc/hosts，本例為 tap-gui.microservice.tw 
+```gherkin=
+sudo vim /etc/hosts
+```
+> 開啟 browser 輸入 http://tap-gui.[domain name]，開啟網頁並透過 github 驗證
 
 ### 應用部署
 > 建立單一使用者的相關參數
