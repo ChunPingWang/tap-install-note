@@ -364,7 +364,17 @@ tanzu apps workload create tanzu-java-web-app \
   --annotation autoscaling.knative.dev/minScale=1 \
   --namespace $TAP_DEV_NAMESPACE \
   --yes
+
 ```
+> 取得 workload log
+```gherkin=
+tanzu apps workload tail tanzu-java-web-app --timestamp --since 1h
+```
+> 取得 workload 資訊
+```gherkin=
+tanzu apps workload get tanzu-java-web-app
+```
+> 刪除 workload
 ```gherkin=
 # 刪除應用 
 tanzu apps workload delete tanzu-java-web-app
