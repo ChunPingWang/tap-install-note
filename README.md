@@ -287,6 +287,11 @@ tekton-pipelines            tekton-pipelines-controller                         
 ```gherkin=
 sudo vim /etc/hosts
 ```
+> 結果如下所示：
+```
+10.0.0.44	    reg.microservice.tw
+10.97.105.137  	tap-gui.microservice.tw
+```
 > 開啟 browser 輸入 http://tap-gui.[domain name]，開啟網頁並透過 github 驗證
 
 ### 應用部署
