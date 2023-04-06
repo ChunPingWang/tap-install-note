@@ -3,7 +3,7 @@
 
 ### Ubuntu 修改 open file 上限 (須 reboot OS)
 ```gherkin=
-# sudo vim /etc/security/limit.comf，加入下列兩個參數
+# sudo vim /etc/security/limit.conf，加入下列兩個參數
 * soft nofile 65536
 * hard nofile 65536
 ```
