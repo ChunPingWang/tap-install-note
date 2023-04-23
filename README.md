@@ -110,11 +110,10 @@ imgpkg copy   --tar tap-packages-1.5.0.tar   --to-repo $INSTALL_REGISTRY_HOSTNAM
 ```gherkin=
 tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
 # 下載
-imgpkg copy -b $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/full-tbs-deps-package-repo:1.7.4 \
-  --to-tar=tbs-full-deps-1.7.4.tar
+imgpkg copy -b registry.tanzu.vmware.com/build-service/bundle:1.10.8   --to-tar=tbs-full-deps-1.10.8.tar
 # 上傳
-imgpkg copy --tar tbs-full-deps-1.7.4.tar \
-  --to-repo=$INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/full-tbs-deps-package-repo
+imgpkg copy --tar tbs-full-deps-1.10.8.tar \
+  --to-repo=$INSTALL_REGISTRY_HOSTNAME/build-service/full-tbs-deps-package-repo
 
 ```
 
