@@ -25,7 +25,7 @@ export TAP_DEV_NAMESPACE=default
 ```
 ### minikube 啟動
 ```gherkin=
-minikube start --kubernetes-version='1.22.' --cpus='10' --memory='60g' --insecure-registry="reg.microservice.tw"
+minikube start --kubernetes-version='1.25.8' --cpus='10' --memory='60g' --insecure-registry="reg.microservice.tw"
 ```
 > 開啟另外一個 terminal 執行，啟動 LoadBalancer
 ```gherkin=
