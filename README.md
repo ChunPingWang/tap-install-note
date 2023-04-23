@@ -9,7 +9,7 @@
 ```
 ### 環境變數
 ```gherkin=
-export TAP_VERSION=1.3.4
+export TAP_VERSION=1.5.0
 
 export TAP_NAMESPACE=tap-install
 
@@ -49,12 +49,15 @@ tap-apps #部署應用時，ootb_supply_chain_basic 需要用的 repo
 ###安裝 Taznu cli 與 Carvel 工具
 > 從 https://network.pivotal.io/ 下載 VMware Tanzu Application Platform -> tanzu cli
 ```gherkin=
-tar -xvf tanzu-framework-linux-amd64.tar -C $HOME/tanzu
+
+mkdir ~/tanzu
+
+tar -xvf tanzu-framework-linux-amd64-v0.28.1.1.tar -C $HOME/tanzu
 
 export TANZU_CLI_NO_INIT=true
 
 cd $HOME/tanzu
-export VERSION=v0.25.0
+export VERSION=v0.28.1
 sudo install cli/core/$VERSION/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 
 tanzu plugin install --local cli all
@@ -64,7 +67,7 @@ tanzu plugin list
 > 從 https://network.pivotal.io/ 下載 Cluster Essentials for VMware Tanzu -> Carvel cli
 ```gherkin=
 mkdir $HOME/tanzu-cluster-essentials
-tar -xvf DOWNLOADED-CLUSTER-ESSENTIALS-BUNDLE -C $HOME/tanzu-cluster-essentials
+tar -xvf tanzu-cluster-essentials-linux-amd64-1.5.0.tgz -C $HOME/tanzu-cluster-essentials
 
 sudo cp $HOME/tanzu-cluster-essentials/imgpkg /usr/local/bin
 
