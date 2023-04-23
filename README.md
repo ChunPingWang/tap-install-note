@@ -89,12 +89,12 @@ docker login $INSTALL_REGISTRY_HOSTNAME
 ```gherkin=
 # 下載
 imgpkg copy \
-    -b registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9 \
-    --to-tar cluster-essentials-bundle-1.3.0.tar \
+    -b registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:79abddbc3b49b44fc368fede0dab93c266ff7c1fe305e2d555ed52d00361b446 \
+    --to-tar cluster-essentials-bundle-1.5.0.tar \
     --include-non-distributable-layers
 # 上傳    
 imgpkg copy \
-    --tar cluster-essentials-bundle-1.3.0.tar \
+    --tar cluster-essentials-bundle-1.5.0.tar \
     --to-repo $INSTALL_REGISTRY_HOSTNAME/tanzu-cluster-essentials/cluster-essentials-bundle \
     --include-non-distributable-layers \
     --registry-ca-cert-path microservice.tw.crt    
@@ -102,9 +102,9 @@ imgpkg copy \
 > TAP packages
 ```gherkin=
 # 下載
-imgpkg copy   -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:1.3.3   --to-tar tap-packages-1.3.3.tar   --include-non-distributable-layers
+imgpkg copy   -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:1.5.0   --to-tar tap-packages-1.5.0.tar   --include-non-distributable-layers
 # 上傳
-imgpkg copy   --tar tap-packages-1.3.3.tar   --to-repo $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/tap-packages   --include-non-distributable-layers
+imgpkg copy   --tar tap-packages-1.5.0.tar   --to-repo $INSTALL_REGISTRY_HOSTNAME/$INSTALL_REPO/tap-packages   --include-non-distributable-layers
 ```
 >TBS full dependency
 ```gherkin=
@@ -128,7 +128,7 @@ kubectl create secret generic kapp-controller-config \
   --namespace kapp-controller \
   --from-file caCerts=./microservice.tw.crt
 
-INSTALL_BUNDLE=$INSTALL_REGISTRY_HOSTNAME/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9 \
+INSTALL_BUNDLE=$INSTALL_REGISTRY_HOSTNAME/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:79abddbc3b49b44fc368fede0dab93c266ff7c1fe305e2d555ed52d00361b446 \
   INSTALL_REGISTRY_HOSTNAME=$INSTALL_REGISTRY_HOSTNAME \
   INSTALL_REGISTRY_USERNAME=$INSTALL_REGISTRY_USERNAME \
   INSTALL_REGISTRY_PASSWORD=$INSTALL_REGISTRY_PASSWORD \
